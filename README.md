@@ -13,7 +13,9 @@ shows only its text, not a translucent gray slab. It also clips the windows
 behind a Moonglass window so you see the desktop through the transparent areas,
 not a soup of other app windows.
 
-![screenshot placeholder](docs/screenshot.png)
+<video src="https://github.com/eric-frost/moonglass/raw/main/docs/moonglass-demo.mp4" controls muted loop width="900"></video>
+
+> [▶ Watch the demo](https://github.com/eric-frost/moonglass/raw/main/docs/moonglass-demo.mp4) if the player above doesn't load.
 
 ## Features
 
