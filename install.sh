@@ -4,6 +4,7 @@
 # asset, and installs it. Falls back to a source build when no asset matches.
 # Usage:  curl -fsSL .../install.sh | sh
 #         ./install.sh --from-source     # force a local build
+#         ./install.sh --uninstall       # remove Moonglass
 set -eu
 
 REPO="${MOONGLASS_REPO:-eric-frost/moonglass}"   # override with MOONGLASS_REPO=owner/name
@@ -13,6 +14,30 @@ trap 'rm -rf "$TMP"' EXIT
 
 say() { printf '\033[1;36m=>\033[0m %s\n' "$*"; }
 die() { printf '\033[1;31merror:\033[0m %s\n' "$*" >&2; exit 1; }
+
+# remove Moonglass — distro-agnostic: finds the installed plugin + kpackage paths
+uninstall() {
+    say "Removing Moonglass"
+    found=0
+    for f in $(find /usr /usr/local -path '*/kwin/effects/*' \
+                 \( -name 'kwin-effect-moonglass.so' -o -name 'kwin_moonglass_config.so' \) 2>/dev/null); do
+        say "  rm $f"; sudo rm -f "$f"; found=1
+    done
+    for d in $(find /usr /usr/local -type d -path '*/kpackage/kwin/effects/kwin-effect-moonglass' 2>/dev/null); do
+        say "  rm -r $d"; sudo rm -rf "$d"; found=1
+    done
+    [ "$found" = 1 ] || { say "Not installed — nothing to remove."; return 0; }
+    # unload from the running session (no compositor restart needed)
+    if command -v qdbus6 >/dev/null 2>&1; then
+        qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.unloadEffect kwin-effect-moonglass >/dev/null 2>&1 || true
+    fi
+    say "Removed. Your Moonglass settings in kwinrc are left untouched."
+}
+
+# 0. uninstall flag — handled before any Plasma/KWin detection
+case "${1:-}" in
+    --uninstall|--remove) uninstall; exit 0 ;;
+esac
 
 # 1. identify distro
 [ -r /etc/os-release ] || die "cannot read /etc/os-release"

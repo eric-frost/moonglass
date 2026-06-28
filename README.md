@@ -15,7 +15,7 @@ Unlike ordinary terminal/window transparency — which dims the *whole* window b
 a uniform alpha — Moonglass keys on per-pixel luminance, so a dark terminal
 shows only its text, not a translucent gray slab. It also clips the windows
 behind a Moonglass window so you see the desktop through the transparent areas,
-not a soup of other app windows.
+not a soup of overlapping app windows.
 
 ## Features
 
@@ -72,6 +72,16 @@ qdbus6 org.kde.KWin /KWin org.kde.KWin.replace   # reload compositor
 
 After a KWin update the binary may become unsupported — rebuild and reinstall.
 Packaged installs (PPA/AUR) handle this for you.
+
+### Uninstall
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/eric-frost/moonglass/main/install.sh | sh -s -- --uninstall
+```
+
+Or `./install.sh --uninstall` from a checkout. It removes the installed plugin
+files and unloads the effect; your Moonglass settings in `kwinrc` are left
+untouched. (Packaged installs: use your package manager instead.)
 
 ## Using it
 
