@@ -1,15 +1,15 @@
 # Moonglass
 
-**Luminance-keyed window transparency for KWin (Plasma 6).**
+**Brightness-keyed window transparency for the KDE Plasma desktop on Linux.**
 
 https://github.com/user-attachments/assets/3be3078f-1b64-4cc7-a8fa-25fd0c982804
 
 <!-- Fallback if the video above stops rendering: ![Moonglass demo](docs/moonglass-demo.gif) -->
 
-Moonglass is a KWin compositor effect that fades each window pixel by its
-brightness: dark pixels become transparent, bright pixels (text, UI accents)
-stay opaque. The result is a window whose background dissolves into the desktop
-while its content keeps floating, readable, on top.
+Moonglass is a desktop effect for KDE Plasma (Linux) that fades each window
+pixel by its brightness: dark pixels become transparent, bright pixels (text,
+UI accents) stay opaque. The result is a window whose background dissolves into
+the desktop while its content keeps floating, readable, on top.
 
 Unlike ordinary terminal/window transparency — which dims the *whole* window by
 a uniform alpha — Moonglass keys on per-pixel luminance, so a dark terminal
@@ -33,8 +33,8 @@ not a soup of other app windows.
 
 ## Requirements
 
-- **Plasma 6 / KWin 6** on Wayland. (Plasma 5 is not supported — the effect API
-  differs.)
+- **KDE Plasma 6** (its KWin 6 compositor) on **Wayland**. (Plasma 5 is not
+  supported — the effect API differs.)
 - An OpenGL compositing backend.
 
 ## Installing
