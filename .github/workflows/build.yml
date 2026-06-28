@@ -13,6 +13,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Needed for softprops/action-gh-release to create the release and upload assets
+# (the repo's default GITHUB_TOKEN is read-only).
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -73,12 +78,23 @@ jobs:
           # KWin version: try the binary, else fall back to the package manager.
           kwin="$(kwin_wayland --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)"
           if [ -z "$kwin" ]; then
+            # No runtime binary in CI containers — read the version from the packages
+            # that are actually installed (the -dev package always is).
             case "$ID" in
-              ubuntu|debian|kubuntu) kwin="$(dpkg-query -W -f='${Version}' kwin-wayland 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)" ;;
-              fedora) kwin="$(rpm -q --qf '%{VERSION}' kwin 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)" ;;
-              arch)   kwin="$(pacman -Q kwin 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)" ;;
+              ubuntu|debian|kubuntu)
+                for p in kwin-wayland kwin-common kwin-dev; do
+                  kwin="$(dpkg-query -W -f='${Version}' "$p" 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)"
+                  [ -n "$kwin" ] && break
+                done ;;
+              fedora)
+                for p in kwin kwin-devel; do
+                  kwin="$(rpm -q --qf '%{VERSION}\n' "$p" 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)"
+                  [ -n "$kwin" ] && break
+                done ;;
+              arch)   kwin="$(pacman -Q kwin 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)" ;;
             esac
           fi
+          [ -n "$kwin" ] || { echo "could not determine KWin version for asset name" >&2; exit 1; }
           asset="moonglass-${ID}-${VERSION_ID}-kwin${kwin}.tar.gz"
           tar -C pkgroot -czf "$asset" .
           echo "asset=$asset" >> "$GITHUB_OUTPUT"
