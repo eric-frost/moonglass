@@ -1,0 +1,52 @@
+#version 140
+
+// KWin's OffscreenEffect does not wrap custom shaders with the stock fragment
+// color-management pipeline. Include and call it explicitly so output brightness,
+// dimming, HDR/ICC transforms, and saturation match normal windows.
+#include "colormanagement.glsl"
+#include "saturation.glsl"
+
+uniform sampler2D sampler;
+uniform vec4 modulation;
+
+uniform float opaqueThreshold;
+uniform float transparentThreshold;
+uniform float backgroundOpacity;
+uniform vec3 backgroundColor;
+
+in vec2 texcoord0;
+
+out vec4 fragColor;
+
+void main()
+{
+    vec4 tex = texture(sampler, texcoord0);
+
+    // Un-premultiply alpha
+    vec3 rgb = tex.rgb / max(tex.a, 0.001);
+
+    // Calculate luminance using Rec. 709 coefficients
+    float luminance = dot(rgb, vec3(0.2126, 0.7152, 0.0722));
+
+    float range = max(opaqueThreshold - transparentThreshold, 0.001);
+    float windowOpacity = clamp((luminance - transparentThreshold) / range, 0.0, 1.0);
+
+    // KWin composites OffscreenEffect shader output as premultiplied alpha.
+    // Compose the faded window pixel normally over the optional background
+    // layer, then let KWin blend that premultiplied result over the desktop.
+    float fgAlpha = tex.a * windowOpacity;
+    vec3 fgRgb = rgb * fgAlpha;
+
+    float bgAlpha = backgroundOpacity * tex.a;
+    vec3 bgRgb = backgroundColor * bgAlpha;
+
+    vec3 outRgb = fgRgb + bgRgb * (1.0 - fgAlpha);
+    float outAlpha = fgAlpha + bgAlpha * (1.0 - fgAlpha);
+
+    vec4 outColor = vec4(outRgb, outAlpha);
+    outColor = sourceEncodingToNitsInDestinationColorspace(outColor);
+    outColor = adjustSaturation(outColor);
+    outColor *= modulation;
+
+    fragColor = nitsToDestinationEncoding(outColor);
+}

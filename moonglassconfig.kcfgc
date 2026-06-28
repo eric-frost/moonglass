@@ -1,0 +1,5 @@
+File=moonglass.kcfg
+ClassName=MoonglassConfigKcfg
+NameSpace=KWin
+Singleton=true
+Mutators=true

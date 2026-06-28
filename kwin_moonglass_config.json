@@ -1,0 +1,7 @@
+{
+    "KPlugin": {
+        "Name": "Moonglass",
+        "Description": "Configuration for Moonglass effect"
+    },
+    "X-KDE-ParentComponents": ["kwin-effect-moonglass"]
+}

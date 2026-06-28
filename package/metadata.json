@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Name": "Moonglass",
+        "Description": "Linearly fades window pixels between transparent and opaque brightness thresholds",
+        "Icon": "preferences-system-windows",
+        "Category": "Appearance",
+        "License": "GPL-3.0-or-later",
+        "EnabledByDefault": false,
+        "Id": "kwin-effect-moonglass"
+    },
+    "KPackageStructure": "KWin/Effect",
+    "X-KDE-ConfigModule": "kwin_moonglass_config"
+}

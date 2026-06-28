@@ -1,0 +1,33 @@
+Source: kwin-effect-moonglass
+Section: kde
+Priority: optional
+Maintainer: Eric Frost <9555559+eric-frost@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13),
+ cmake,
+ extra-cmake-modules,
+ gettext,
+ kwin-dev,
+ qt6-base-dev,
+ libkf6config-dev,
+ libkf6configwidgets-dev,
+ libkf6coreaddons-dev,
+ libkf6globalaccel-dev,
+ libkf6i18n-dev,
+ libkf6package-dev,
+ libkf6kcmutils-dev
+Standards-Version: 4.7.0
+Homepage: https://github.com/eric-frost/moonglass
+Rules-Requires-Root: no
+
+Package: kwin-effect-moonglass
+Architecture: any
+# KWin effects have no stable ABI; pin to the KWin this was built against so apt
+# rebuilds/updates the two together instead of loading a mismatched binary.
+Depends: ${shlibs:Depends}, ${misc:Depends}, kwin-wayland (>= ${source:Upstream-Version})
+Description: Luminance-keyed window transparency for KWin (Plasma 6)
+ Moonglass fades each window pixel by its brightness: dark pixels become
+ transparent and bright pixels (text, UI accents) stay opaque, so a window's
+ background dissolves into the desktop while its content floats on top.
+ .
+ Unlike uniform window transparency it keys on per-pixel luminance, and clips
+ windows behind a Moonglass window so transparent areas reveal the desktop.

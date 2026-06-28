@@ -1,0 +1,26 @@
+# Maintainer: Eric Frost
+pkgname=kwin-effect-moonglass
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Luminance-keyed window transparency for KWin (Plasma 6)"
+arch=('x86_64')
+url="https://github.com/eric-frost/moonglass"
+license=('GPL-3.0-or-later')
+# kwin is versioned: a build is only valid for the KWin it was compiled against,
+# so this rebuilds from source on the user's machine against their current KWin.
+depends=('kwin' 'kconfig' 'kconfigwidgets' 'kcoreaddons' 'kglobalaccel' 'ki18n'
+         'kpackage' 'kcmutils' 'qt6-base')
+makedepends=('cmake' 'extra-cmake-modules' 'gettext' 'git')
+source=("git+https://github.com/eric-frost/moonglass.git#tag=v${pkgver}")
+sha256sums=('SKIP')
+
+build() {
+    cmake -B build -S "$srcdir/moonglass" \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+}

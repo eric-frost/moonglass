@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>moonglass.json</file>
+    <file alias="effects/moonglass/shaders/moonglass.frag">moonglass.frag</file>
+    <file alias="effects/moonglass/shaders/moonglass_core.frag">moonglass_core.frag</file>
+</qresource>
+</RCC>

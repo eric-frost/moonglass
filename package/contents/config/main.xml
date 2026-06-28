@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.kde.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile name="kwinrc"/>
+    <group name="Effect-Moonglass">
+        <entry name="OpaqueThreshold" type="Double">
+            <default>0.8</default>
+        </entry>
+        <entry name="TransparentThreshold" type="Double">
+            <default>0.2</default>
+        </entry>
+        <entry name="BackgroundColor" type="Color">
+            <default>0, 0, 0</default>
+        </entry>
+        <entry name="BackgroundOpacity" type="Double">
+            <default>0.0</default>
+        </entry>
+        <entry name="ClipOverlaps" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="ApplyToNewWindows" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="DefaultOnRules" type="StringList">
+            <default></default>
+        </entry>
+        <entry name="DefaultOffRules" type="StringList">
+            <default></default>
+        </entry>
+    </group>
+</kcfg>

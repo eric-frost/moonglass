@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MoonglassConfig</class>
+ <widget class="QWidget" name="MoonglassConfig">
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+       <string>Fully Opaque Threshold (0.0 to 1.0):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+     <widget class="QDoubleSpinBox" name="kcfg_OpaqueThreshold">
+     <property name="singleStep">
+      <double>0.05</double>
+     </property>
+     <property name="maximum">
+      <double>1.0</double>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+       <string>Fully Transparent Threshold (0.0 to 1.0):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+     <widget class="QDoubleSpinBox" name="kcfg_TransparentThreshold">
+     <property name="singleStep">
+      <double>0.05</double>
+     </property>
+     <property name="maximum">
+      <double>1.0</double>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Background Color:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="KColorButton" name="kcfg_BackgroundColor">
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>Background Opacity (0.0 to 1.0):</string>
+      </property>
+    </widget>
+   </item>
+    <item row="3" column="1">
+      <widget class="QDoubleSpinBox" name="kcfg_BackgroundOpacity">
+      <property name="singleStep">
+      <double>0.05</double>
+     </property>
+     <property name="maximum">
+      <double>1.0</double>
+     </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Hide windows behind Moonglass windows:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QCheckBox" name="kcfg_ClipOverlaps">
+      <property name="toolTip">
+       <string>When enabled, lower windows are not painted underneath higher Moonglass windows, so transparent areas show the desktop/window stack behind the group instead.</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Enable on new windows by default:</string>
+      </property>
+     </widget>
+    </item>
+     <item row="5" column="1">
+      <widget class="QCheckBox" name="kcfg_ApplyToNewWindows">
+       <property name="toolTip">
+        <string>When enabled, newly opened app windows automatically start with Moonglass applied. Existing windows keep their current state.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Select window rule:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <layout class="QHBoxLayout" name="selectWindowLayout">
+       <item>
+        <widget class="QPushButton" name="selectWindowButton">
+         <property name="text">
+          <string>Select Window…</string>
+         </property>
+         <property name="toolTip">
+          <string>Click, then choose a window to detect the best matching rule.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="addSelectedToDefaultOffButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Add to Default Off</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="addSelectedToDefaultOnButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Add to Default On</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Selected window:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="selectedWindowInfoLabel">
+       <property name="text">
+        <string>No window selected.</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Default Off Rules:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QTextEdit" name="defaultOffRulesText">
+       <property name="toolTip">
+        <string>One rule per line. Matching new windows start without Moonglass, but Meta+Z can still toggle them later.</string>
+       </property>
+       <property name="acceptRichText">
+        <bool>false</bool>
+       </property>
+       <property name="placeholderText">
+        <string>org.kde.krita
+org.kde.haruna</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Default On Rules:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QTextEdit" name="defaultOnRulesText">
+       <property name="toolTip">
+        <string>One rule per line. Matching new windows start with Moonglass even when the global new-window default is off.</string>
+       </property>
+       <property name="acceptRichText">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KColorButton</class>
+   <extends>QPushButton</extends>
+   <header>kcolorbutton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

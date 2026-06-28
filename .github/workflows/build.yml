@@ -1,0 +1,96 @@
+name: build
+
+# Builds Moonglass against each target distro's current KWin and uploads a
+# tarball per (distro, KWin version). On a v* tag the tarballs are attached to
+# the GitHub release so install.sh can fetch a matching prebuilt.
+#
+# NOTE: CI verifies the effect *compiles and links* on each target. It cannot
+# verify runtime behavior — there is no compositor/GPU in a CI container.
+
+on:
+  push:
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: 'kubuntu-25.10', image: 'ubuntu:25.10' }
+          - { name: 'kubuntu-devel', image: 'ubuntu:devel' }
+          - { name: 'fedora',        image: 'fedora:latest' }
+          - { name: 'arch',          image: 'archlinux:latest' }
+    container: ${{ matrix.image }}
+    steps:
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          set -eux
+          . /etc/os-release
+          case "$ID" in
+            ubuntu|debian|kubuntu)
+              export DEBIAN_FRONTEND=noninteractive
+              apt-get update
+              apt-get install -y --no-install-recommends \
+                cmake g++ gettext extra-cmake-modules kwin-dev qt6-base-dev \
+                libkf6config-dev libkf6configwidgets-dev libkf6coreaddons-dev \
+                libkf6globalaccel-dev libkf6i18n-dev libkf6package-dev \
+                libkf6kcmutils-dev ca-certificates git tar gzip ;;
+            fedora)
+              dnf install -y \
+                cmake gcc-c++ gettext extra-cmake-modules kwin-devel qt6-qtbase-devel \
+                kf6-kconfig-devel kf6-kconfigwidgets-devel kf6-kcoreaddons-devel \
+                kf6-kglobalaccel-devel kf6-ki18n-devel kf6-kpackage-devel \
+                kf6-kcmutils-devel git tar gzip ;;
+            arch)
+              pacman -Syu --noconfirm \
+                cmake gcc gettext extra-cmake-modules kwin qt6-base \
+                kconfig kconfigwidgets kcoreaddons kglobalaccel ki18n kpackage \
+                kcmutils git tar gzip ;;
+            *) echo "unknown distro $ID"; exit 1 ;;
+          esac
+
+      - uses: actions/checkout@v4
+
+      - name: Build and stage install
+        shell: bash
+        run: |
+          set -eux
+          cmake -B build -S . -DCMAKE_INSTALL_PREFIX=/usr
+          cmake --build build -j"$(nproc)"
+          DESTDIR="$PWD/pkgroot" cmake --install build
+
+      - name: Package tarball
+        id: pkg
+        shell: bash
+        run: |
+          set -eux
+          . /etc/os-release
+          # KWin version: try the binary, else fall back to the package manager.
+          kwin="$(kwin_wayland --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)"
+          if [ -z "$kwin" ]; then
+            case "$ID" in
+              ubuntu|debian|kubuntu) kwin="$(dpkg-query -W -f='${Version}' kwin-wayland 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)" ;;
+              fedora) kwin="$(rpm -q --qf '%{VERSION}' kwin 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)" ;;
+              arch)   kwin="$(pacman -Q kwin 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)" ;;
+            esac
+          fi
+          asset="moonglass-${ID}-${VERSION_ID}-kwin${kwin}.tar.gz"
+          tar -C pkgroot -czf "$asset" .
+          echo "asset=$asset" >> "$GITHUB_OUTPUT"
+          echo "Built $asset:"; tar -tzf "$asset"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: ${{ steps.pkg.outputs.asset }}
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.pkg.outputs.asset }}
