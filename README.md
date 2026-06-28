@@ -2,6 +2,10 @@
 
 **Luminance-keyed window transparency for KWin (Plasma 6).**
 
+https://github.com/user-attachments/assets/3be3078f-1b64-4cc7-a8fa-25fd0c982804
+
+<!-- Fallback if the video above stops rendering: ![Moonglass demo](docs/moonglass-demo.gif) -->
+
 Moonglass is a KWin compositor effect that fades each window pixel by its
 brightness: dark pixels become transparent, bright pixels (text, UI accents)
 stay opaque. The result is a window whose background dissolves into the desktop
@@ -12,11 +16,6 @@ a uniform alpha — Moonglass keys on per-pixel luminance, so a dark terminal
 shows only its text, not a translucent gray slab. It also clips the windows
 behind a Moonglass window so you see the desktop through the transparent areas,
 not a soup of other app windows.
-
-https://github.com/user-attachments/assets/3be3078f-1b64-4cc7-a8fa-25fd0c982804
-
-<!-- Fallback if the video above stops rendering: ![Moonglass demo](docs/moonglass-demo.gif) -->
-
 
 ## Features
 
