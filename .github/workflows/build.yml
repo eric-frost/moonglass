@@ -1,22 +1,14 @@
-name: build
+name: build (manual)
 
-# Builds Moonglass against each target distro's current KWin and uploads a
-# tarball per (distro, KWin version). On a v* tag the tarballs are attached to
-# the GitHub release so install.sh can fetch a matching prebuilt.
-#
-# NOTE: CI verifies the effect *compiles and links* on each target. It cannot
-# verify runtime behavior — there is no compositor/GPU in a CI container.
+# Manual build experiment. Moonglass tracks the *current* KWin effect API, which
+# is newer than the KWin shipped by stock ubuntu/fedora/arch images — so this
+# matrix does NOT compile on those yet, and no prebuilt binaries are published.
+# Kept as workflow_dispatch-only (it never auto-runs/auto-fails) to record the
+# per-distro build dependencies for when distros catch up. Real installs build
+# from source via install.sh.
 
 on:
-  push:
-    tags: ['v*']
-  pull_request:
   workflow_dispatch:
-
-# Needed for softprops/action-gh-release to create the release and upload assets
-# (the repo's default GITHUB_TOKEN is read-only).
-permissions:
-  contents: write
 
 jobs:
   build:
@@ -109,9 +101,3 @@ jobs:
         with:
           name: ${{ matrix.name }}
           path: ${{ steps.pkg.outputs.asset }}
-
-      - name: Attach to release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ${{ steps.pkg.outputs.asset }}

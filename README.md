@@ -36,28 +36,28 @@ not a soup of overlapping app windows.
 - **KDE Plasma 6** (its KWin 6 compositor) on **Wayland**. (Plasma 5 is not
   supported — the effect API differs.)
 - An OpenGL compositing backend.
+- To build: a current KWin 6 plus its `kwin-dev` / `kwin-devel` headers — the
+  effect API changes between KWin releases, so an old 6.x may not compile.
 
 ## Installing
 
-### Prebuilt (recommended)
+Moonglass is a compiled KWin effect with **no stable ABI** — a binary only
+loads on the exact KWin it was built for, and the effect API itself changes
+between KWin releases. So for now it installs **by building from source**
+against your own KWin. (Prebuilt per-distro binaries aren't available yet — see
+[Prebuilt binaries](#prebuilt-binaries).)
 
-KWin effects are compiled C++ and have **no stable ABI** — a binary built for
-one KWin version is rejected by another. So prebuilt binaries are published
-per KWin version. The installer picks the matching one:
+### Quick install (builds from source)
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/eric-frost/moonglass/main/install.sh | sh
 ```
 
-The script detects your distro and KWin version and installs the matching
-release asset, or falls back to a source build if none matches.
+The script detects your distro and KWin, uses a matching prebuilt release asset
+if one exists (none yet), and otherwise builds from source. You need a Plasma 6
+/ KWin 6 **development** environment — it reports any missing packages.
 
-> **Platform support.** Binaries are verified on **Kubuntu**. Fedora and Arch
-> builds are produced by CI and compile cleanly, but are *community-tested* —
-> CI cannot run a compositor to verify runtime behavior. If a prebuilt doesn't
-> match your KWin, the installer builds from source.
-
-### From source
+### From source (manual)
 
 Needs the KWin and KF6 development packages (see
 [`.github/workflows/build.yml`](.github/workflows/build.yml) for the exact
@@ -70,8 +70,8 @@ sudo cmake --install build
 qdbus6 org.kde.KWin /KWin org.kde.KWin.replace   # reload compositor
 ```
 
-After a KWin update the binary may become unsupported — rebuild and reinstall.
-Packaged installs (PPA/AUR) handle this for you.
+After a KWin update the binary may become unsupported — rebuild and reinstall
+(just re-run the quick-install one-liner).
 
 ### Uninstall
 
@@ -90,17 +90,17 @@ untouched. (Packaged installs: use your package manager instead.)
   Moonglass** (the wrench/settings icon): thresholds, background, clipping,
   auto-apply, and per-app rules.
 
-## Why "no stable ABI" matters
+## Prebuilt binaries
 
-KWin checks the effect's API version at load time and refuses a mismatch, so a
-single binary can't span versions. Moonglass deals with this two ways:
+Not available yet — and there's a real reason. KWin checks an effect's API
+version at load and refuses a mismatch, *and* the source API changes between
+releases. Moonglass tracks the current KWin effect API, so it needs a recent
+KWin 6 to build at all, and a prebuilt would have to match your exact distro
+**and** KWin version to be useful.
 
-1. **Packaged installs** (PPA `.deb`, AUR) depend on the exact KWin version and
-   are rebuilt by their maintainers when KWin updates.
-2. **CI** builds binaries per target so the installer can fetch a match instead
-   of asking you to install a toolchain.
-
-If you build from source, just rebuild after KWin upgrades.
+Until that's solved, the installer builds from source against whatever KWin you
+have. Packaged installs (PPA `.deb`, AUR) that pin the KWin version are the
+longer-term plan.
 
 ## License
 
