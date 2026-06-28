@@ -90,17 +90,13 @@ untouched. (Packaged installs: use your package manager instead.)
   Moonglass** (the wrench/settings icon): thresholds, background, clipping,
   auto-apply, and per-app rules.
 
+![The Moonglass settings panel in KDE System Settings](docs/settings.png)
+
 ## Prebuilt binaries
 
-Not available yet — and there's a real reason. KWin checks an effect's API
-version at load and refuses a mismatch, *and* the source API changes between
-releases. Moonglass tracks the current KWin effect API, so it needs a recent
-KWin 6 to build at all, and a prebuilt would have to match your exact distro
-**and** KWin version to be useful.
+Not available yet because KWin checks an effect's API version at load and refuses a mismatch, *and* the source API changes between releases. Moonglass tracks the current KWin effect API, so it needs a recent KWin 6 to build at all, and a prebuilt would have to match your exact distro **and** KWin version to be useful.
 
-Until that's solved, the installer builds from source against whatever KWin you
-have. Packaged installs (PPA `.deb`, AUR) that pin the KWin version are the
-longer-term plan.
+Until that's solved, the installer builds from source against whatever KWin you have. Packaged installs (PPA `.deb`, AUR) that pin the KWin version are the longer-term plan.
 
 ## License
 
