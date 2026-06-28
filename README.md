@@ -13,7 +13,10 @@ shows only its text, not a translucent gray slab. It also clips the windows
 behind a Moonglass window so you see the desktop through the transparent areas,
 not a soup of other app windows.
 
-![Moonglass demo](docs/moonglass-demo.gif)
+https://github.com/user-attachments/assets/3be3078f-1b64-4cc7-a8fa-25fd0c982804
+
+<!-- Fallback if the video above stops rendering: ![Moonglass demo](docs/moonglass-demo.gif) -->
+
 
 ## Features
 
