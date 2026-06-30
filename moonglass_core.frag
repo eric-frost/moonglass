@@ -25,8 +25,9 @@ void main()
     // Un-premultiply alpha
     vec3 rgb = tex.rgb / max(tex.a, 0.001);
 
-    // Calculate luminance using Rec. 709 coefficients
-    float luminance = dot(rgb, vec3(0.2126, 0.7152, 0.0722));
+    // Brightness = max channel (HSV Value), so vivid saturated colors (red, blue)
+    // stay opaque instead of fading like they do under Rec. 709 luminance.
+    float luminance = max(rgb.r, max(rgb.g, rgb.b));
 
     float range = max(opaqueThreshold - transparentThreshold, 0.001);
     float windowOpacity = clamp((luminance - transparentThreshold) / range, 0.0, 1.0);
